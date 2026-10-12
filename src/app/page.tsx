@@ -17,6 +17,7 @@ import { DoctorVisitBrief } from "@/components/brief/DoctorVisitBrief";
 import { FamilyProfiles } from "@/components/family/FamilyProfiles";
 import { ABDMHub } from "@/components/abdm/ABDMHub";
 import { SettingsView } from "@/components/settings/SettingsView";
+import { AdminPortal } from "@/components/admin/AdminPortal";
 import { AuthModal } from "@/components/auth/AuthModal";
 
 export default function CareLensApp() {
@@ -153,6 +154,8 @@ export default function CareLensApp() {
         {activeTab === "abdm" && <ABDMHub />}
 
         {activeTab === "settings" && <SettingsView />}
+
+        {activeTab === "admin" && <AdminPortal />}
       </main>
 
       {/* Mobile-First Bottom Tab Bar */}

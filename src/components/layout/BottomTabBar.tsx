@@ -1,17 +1,19 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "@/lib/useTranslation";
 import { LayoutDashboard, Camera, History, CalendarClock, MessageSquareText, FileBadge2, Settings } from "lucide-react";
 
 export function BottomTabBar({ activeTab, onSelectTab }: { activeTab: string; onSelectTab: (tab: string) => void }) {
+  const { t } = useTranslation();
   const tabs = [
-    { id: "dashboard", label: "Home", icon: LayoutDashboard },
-    { id: "upload", label: "Scan", icon: Camera },
-    { id: "timeline", label: "Timeline", icon: History },
-    { id: "medications", label: "Meds", icon: CalendarClock },
-    { id: "ask", label: "Ask", icon: MessageSquareText },
-    { id: "brief", label: "Brief", icon: FileBadge2 },
-    { id: "settings", label: "Settings", icon: Settings },
+    { id: "dashboard", label: t("tabHome"), icon: LayoutDashboard },
+    { id: "upload", label: t("tabScan"), icon: Camera },
+    { id: "timeline", label: t("tabTimeline"), icon: History },
+    { id: "medications", label: t("tabMeds"), icon: CalendarClock },
+    { id: "ask", label: t("tabAsk"), icon: MessageSquareText },
+    { id: "brief", label: t("tabBrief"), icon: FileBadge2 },
+    { id: "settings", label: t("tabSettings"), icon: Settings },
   ];
 
   return (

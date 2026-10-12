@@ -1,8 +1,7 @@
-"use client";
-
 import React, { useState } from "react";
 import { generateFHIRBundle } from "@/lib/fhir";
 import { useCareLensStore } from "@/lib/store";
+import { useTranslation } from "@/lib/useTranslation";
 import {
   ShieldCheck,
   Download,
@@ -18,6 +17,7 @@ import {
 } from "lucide-react";
 
 export function ABDMHub() {
+  const { t } = useTranslation();
   const { familyMembers, activeFamilyMemberId } = useCareLensStore();
   const activeMember = familyMembers.find((m) => m.id === activeFamilyMemberId);
   const patientName = activeMember ? activeMember.name : "Rajesh Kumar";
@@ -115,17 +115,17 @@ export function ABDMHub() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
           <div>
             <h2 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2">
-              <ShieldCheck className="w-6 h-6 text-emerald-600" /> ABHA Identity Card
+              <ShieldCheck className="w-6 h-6 text-emerald-600" /> {t("abdmTitle")}
             </h2>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Ayushman Bharat Health Account (14-digit unique health identifier)
+              {t("abdmSubtitle")}
             </p>
           </div>
 
           <div>
             {isLinked ? (
               <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1.5 shadow-xs">
-                <CheckCircle2 className="w-4 h-4" /> ABHA Linked &amp; Active
+                <CheckCircle2 className="w-4 h-4" /> {t("abhaLinkedStatus")}
               </span>
             ) : (
               <button
@@ -209,7 +209,7 @@ export function ABDMHub() {
               onClick={handleDownloadBundle}
               className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-md shadow-primary/20 hover:opacity-95 transition-opacity flex items-center gap-1.5"
             >
-              <Download className="w-4 h-4" /> Export FHIR Bundle
+              <Download className="w-4 h-4" /> {t("exportFhirBundle")}
             </button>
           </div>
         </div>

@@ -1,8 +1,7 @@
-"use client";
-
 import React, { useState } from "react";
 import { MedicationRecord, DrugSafetyAlert } from "@/lib/types";
 import { evaluateMedicineSafety } from "@/lib/safety-engine";
+import { useTranslation } from "@/lib/useTranslation";
 import {
   Pill,
   Calendar,
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 
 export function MedicationSchedule() {
+  const { t } = useTranslation();
   const [meds, setMeds] = useState<MedicationRecord[]>([
     {
       id: "med-1",
@@ -224,10 +224,10 @@ export function MedicationSchedule() {
       <div className="bg-card rounded-2xl border border-border p-6 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2">
-            <Pill className="w-6 h-6 text-primary" /> Daily Medication Schedule
+            <Pill className="w-6 h-6 text-primary" /> {t("medsTitle")}
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Organized intake plan, daily adherence checklist, and calendar alarms.
+            {t("medsSubtitle")}
           </p>
         </div>
 
@@ -236,7 +236,7 @@ export function MedicationSchedule() {
             onClick={handleExportICS}
             className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-md shadow-primary/20 hover:opacity-95 transition-opacity flex items-center gap-2"
           >
-            <Download className="w-4 h-4" /> Export .ics Reminders
+            <Download className="w-4 h-4" /> {t("downloadCalendar")}
           </button>
         </div>
       </div>
@@ -244,12 +244,12 @@ export function MedicationSchedule() {
       {/* Adherence Summary Strip */}
       <div className="bg-card rounded-2xl border border-border p-5 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Today&apos;s Adherence</span>
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t("adherenceNote")}</span>
           <div className="text-2xl font-extrabold text-foreground mt-0.5">
-            {takenCount} of {totalTrackedSlots} Doses Taken ({adherenceRate}%)
+            {takenCount} / {totalTrackedSlots} {t("dosesTaken")} ({adherenceRate}%)
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Consistent timing helps maximize efficacy and avoid drug concentration peaks.
+            {t("adherenceNote")}
           </p>
         </div>
 
@@ -267,8 +267,8 @@ export function MedicationSchedule() {
         <div className="bg-card rounded-2xl border border-border p-5 shadow-card space-y-3">
           <div className="flex items-center gap-2 pb-2 border-b border-border">
             <Sun className="w-5 h-5 text-amber-500" />
-            <h3 className="font-bold text-sm text-foreground">Morning (08:00 AM - 09:30 AM)</h3>
-            <span className="text-[11px] text-muted-foreground ml-auto">{morningMeds.length} medicines</span>
+            <h3 className="font-bold text-sm text-foreground">{t("morningSlot")}</h3>
+            <span className="text-[11px] text-muted-foreground ml-auto">{morningMeds.length} {t("navMedications")}</span>
           </div>
 
           <div className="space-y-2">
@@ -311,8 +311,8 @@ export function MedicationSchedule() {
           <div className="bg-card rounded-2xl border border-border p-5 shadow-card space-y-3">
             <div className="flex items-center gap-2 pb-2 border-b border-border">
               <Coffee className="w-5 h-5 text-amber-600" />
-              <h3 className="font-bold text-sm text-foreground">Afternoon (01:00 PM - 02:00 PM)</h3>
-              <span className="text-[11px] text-muted-foreground ml-auto">{afternoonMeds.length} medicines</span>
+              <h3 className="font-bold text-sm text-foreground">{t("afternoonSlot")}</h3>
+              <span className="text-[11px] text-muted-foreground ml-auto">{afternoonMeds.length} {t("navMedications")}</span>
             </div>
 
             <div className="space-y-2">
@@ -332,8 +332,8 @@ export function MedicationSchedule() {
         <div className="bg-card rounded-2xl border border-border p-5 shadow-card space-y-3">
           <div className="flex items-center gap-2 pb-2 border-b border-border">
             <Moon className="w-5 h-5 text-indigo-500" />
-            <h3 className="font-bold text-sm text-foreground">Night / Bedtime (08:30 PM - 10:00 PM)</h3>
-            <span className="text-[11px] text-muted-foreground ml-auto">{nightMeds.length} medicines</span>
+            <h3 className="font-bold text-sm text-foreground">{t("nightSlot")}</h3>
+            <span className="text-[11px] text-muted-foreground ml-auto">{nightMeds.length} {t("navMedications")}</span>
           </div>
 
           <div className="space-y-2">
@@ -376,7 +376,7 @@ export function MedicationSchedule() {
           <div className="bg-card rounded-2xl border border-border p-5 shadow-card space-y-3">
             <div className="flex items-center gap-2 pb-2 border-b border-border">
               <AlertTriangle className="w-5 h-5 text-blue-500" />
-              <h3 className="font-bold text-sm text-foreground">As Needed (SOS)</h3>
+              <h3 className="font-bold text-sm text-foreground">{t("sosSlot")}</h3>
             </div>
 
             <div className="space-y-2">
@@ -398,7 +398,7 @@ export function MedicationSchedule() {
         <div className="bg-card rounded-2xl border border-amber-300 p-6 shadow-card space-y-3 bg-gradient-to-br from-card via-amber-50/20 to-card">
           <div className="flex items-center gap-2 pb-2 border-b border-border">
             <ShieldAlert className="w-5 h-5 text-amber-700" />
-            <h3 className="font-bold text-base text-foreground">Pharmacological Safety Alerts</h3>
+            <h3 className="font-bold text-base text-foreground">{t("medSafetyAlertsTitle")}</h3>
           </div>
 
           <div className="space-y-3">

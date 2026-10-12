@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { CLINICAL_RULES } from "@/lib/rules-engine";
 import { useCareLensStore } from "@/lib/store";
+import { useTranslation } from "@/lib/useTranslation";
 import {
   TrendingUp,
   TrendingDown,
@@ -30,6 +31,7 @@ interface DataPoint {
 }
 
 export function BiomarkerCharts() {
+  const { t } = useTranslation();
   const { familyMembers, activeFamilyMemberId } = useCareLensStore();
   const activeMember = familyMembers.find((m) => m.id === activeFamilyMemberId);
   const patientGender = activeMember?.gender || "male";
@@ -99,16 +101,16 @@ export function BiomarkerCharts() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2">
-              <Activity className="w-6 h-6 text-primary" /> Longitudinal Biomarker Trends
+              <Activity className="w-6 h-6 text-primary" /> {t("trendsTitle")}
             </h2>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Trajectory over time with age and sex-adjusted healthy reference range shaded.
+              {t("trendsSubtitle")}
             </p>
           </div>
 
           {/* Test Selector */}
           <div className="flex items-center gap-2">
-            <label className="text-xs font-semibold text-muted-foreground">Select Test:</label>
+            <label className="text-xs font-semibold text-muted-foreground">{t("selectTest")}:</label>
             <select
               value={selectedKey}
               onChange={(e) => setSelectedKey(e.target.value)}
@@ -126,17 +128,17 @@ export function BiomarkerCharts() {
         {/* Quick Stats Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-4 border-t border-border">
           <div className="p-3 rounded-xl bg-muted/40 border border-border">
-            <span className="text-[11px] font-semibold text-muted-foreground">Latest Value</span>
+            <span className="text-[11px] font-semibold text-muted-foreground">{t("latestValue")}</span>
             <div className="text-xl font-extrabold text-foreground mt-0.5">
               {latestVal} <span className="text-xs font-medium text-muted-foreground">{activeRule.unit}</span>
             </div>
             <div className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
-              <Calendar className="w-3 h-3" /> {points[points.length - 1]?.date}
+              <Calendar className="w-3.5 h-3.5" /> {points[points.length - 1]?.date}
             </div>
           </div>
 
           <div className="p-3 rounded-xl bg-muted/40 border border-border">
-            <span className="text-[11px] font-semibold text-muted-foreground">Recent Shift</span>
+            <span className="text-[11px] font-semibold text-muted-foreground">{t("biomarkerTrajectory")}</span>
             <div
               className={`text-xl font-extrabold mt-0.5 flex items-center gap-1 ${
                 isElevated ? "text-amber-600" : isLow ? "text-blue-600" : "text-emerald-600"
@@ -149,35 +151,35 @@ export function BiomarkerCharts() {
               ) : null}
               {delta > 0 ? `+${delta}` : delta} {activeRule.unit}
             </div>
-            <span className="text-[11px] text-muted-foreground mt-1 block">vs prior test</span>
+            <span className="text-[11px] text-muted-foreground mt-1 block">{t("vsPriorTest")}</span>
           </div>
 
           <div className="p-3 rounded-xl bg-muted/40 border border-border">
-            <span className="text-[11px] font-semibold text-muted-foreground">Target Healthy Range</span>
+            <span className="text-[11px] font-semibold text-muted-foreground">{t("normalRange")}</span>
             <div className="text-base font-extrabold text-emerald-700 mt-1">
               {range.min} - {range.max} <span className="text-xs font-normal">{activeRule.unit}</span>
             </div>
-            <span className="text-[10px] text-muted-foreground mt-1 block">Shaded in green below</span>
+            <span className="text-[10px] text-muted-foreground mt-1 block">{t("stableNormal")}</span>
           </div>
 
           <div className="p-3 rounded-xl bg-muted/40 border border-border">
-            <span className="text-[11px] font-semibold text-muted-foreground">Current Status</span>
+            <span className="text-[11px] font-semibold text-muted-foreground">{t("currentStatus")}</span>
             <div className="mt-1">
               {isElevated ? (
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 inline-flex items-center gap-1">
-                  <AlertTriangle className="w-3.5 h-3.5" /> High
+                  <AlertTriangle className="w-3.5 h-3.5" /> {t("statusHigh")}
                 </span>
               ) : isLow ? (
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 inline-flex items-center gap-1">
-                  <AlertTriangle className="w-3.5 h-3.5" /> Low
+                  <AlertTriangle className="w-3.5 h-3.5" /> {t("statusLow")}
                 </span>
               ) : (
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 inline-flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Healthy Normal
+                  <CheckCircle2 className="w-3.5 h-3.5" /> {t("statusNormal")}
                 </span>
               )}
             </div>
-            <span className="text-[10px] text-muted-foreground mt-1.5 block">5 reports on file</span>
+            <span className="text-[10px] text-muted-foreground mt-1.5 block">5 {t("reportsCount")}</span>
           </div>
         </div>
       </div>
@@ -186,15 +188,15 @@ export function BiomarkerCharts() {
       <div className="bg-card rounded-2xl border border-border p-6 shadow-card space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
-            <span>{activeRule.aliases[0].toUpperCase()} Longitudinal Curve</span>
+            <span>{activeRule.aliases[0].toUpperCase()} {t("trendCurve")}</span>
           </h3>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded bg-emerald-500/20 border border-emerald-500/60 inline-block" />
-              Normal Reference Band ({range.min} - {range.max} {activeRule.unit})
+              {t("normalBand")} ({range.min} - {range.max} {activeRule.unit})
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-primary inline-block" /> Measured Values
+              <span className="w-2.5 h-2.5 rounded-full bg-primary inline-block" /> {t("measuredValues")}
             </span>
           </div>
         </div>
@@ -239,6 +241,12 @@ export function BiomarkerCharts() {
                     const data = payload[0].payload as DataPoint;
                     const val = data.value;
                     const status = val > range.max ? "High" : val < range.min ? "Low" : "Normal";
+                    const statusText =
+                      status === "Normal"
+                        ? t("statusNormal")
+                        : status === "High"
+                        ? t("statusHigh")
+                        : t("statusLow");
                     return (
                       <div className="bg-card border border-border p-3 rounded-xl shadow-xl text-xs space-y-1">
                         <div className="font-bold text-foreground">{data.date}</div>
@@ -252,7 +260,7 @@ export function BiomarkerCharts() {
                               : "text-amber-600"
                           }`}
                         >
-                          Status: {status} (Target: {range.min} - {range.max})
+                          {t("currentStatus")}: {statusText} ({t("normalRange")}: {range.min} - {range.max})
                         </div>
                       </div>
                     );
@@ -281,7 +289,7 @@ export function BiomarkerCharts() {
         <div className="p-3 rounded-xl bg-muted/60 border border-border text-[11px] text-muted-foreground flex items-center gap-2">
           <Info className="w-4 h-4 text-primary flex-shrink-0" />
           <span>
-            {activeRule.description || "Values fluctuate based on diet, lifestyle, and adherence to prescribed medications."}
+            {t("trendInfoNote")}
           </span>
         </div>
       </div>

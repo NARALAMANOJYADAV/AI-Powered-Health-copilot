@@ -21,6 +21,7 @@ import {
   Building,
   Sparkles,
 } from "lucide-react";
+import { useTranslation } from "@/lib/useTranslation";
 
 interface VerificationProps {
   imageUrl: string;
@@ -41,6 +42,7 @@ export function VerificationCanvas({
   onSaveConfirmed,
   onCancel,
 }: VerificationProps) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<"labs" | "meds">("labs");
   const [labs, setLabs] = useState<ExtractedLabResult[]>(extraction.lab_results || []);
   const [meds, setMeds] = useState<ExtractedMedicine[]>(extraction.medicines || []);
@@ -136,23 +138,23 @@ export function VerificationCanvas({
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-              Step 2 of 3: Verification
+              {t("stepVerification")}
             </span>
             {lowConfidenceCount > 0 ? (
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 flex items-center gap-1">
-                <AlertTriangle className="w-3.5 h-3.5" /> {lowConfidenceCount} field(s) require review
+                <AlertTriangle className="w-3.5 h-3.5" /> {lowConfidenceCount} {t("fieldsRequireReview")}
               </span>
             ) : (
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5" /> All fields high confidence
+                <CheckCircle2 className="w-3.5 h-3.5" /> {t("allFieldsHighConfidence")}
               </span>
             )}
           </div>
           <h2 className="text-2xl font-extrabold text-foreground mt-1 tracking-tight">
-            Verify Extracted Medical Findings
+            {t("verifyFindingsTitle")}
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Compare extracted results against the original document. Click any row to highlight its source token.
+            {t("verifyFindingsDesc")}
           </p>
         </div>
 
@@ -162,7 +164,7 @@ export function VerificationCanvas({
             disabled={isSaving}
             className="px-4 py-2 rounded-xl bg-muted border border-border text-foreground text-xs font-bold hover:bg-muted/80 transition-colors"
           >
-            Cancel
+            {t("cancelBtn")}
           </button>
           <button
             onClick={handleSave}
@@ -170,10 +172,10 @@ export function VerificationCanvas({
             className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-md shadow-primary/20 hover:opacity-95 transition-opacity flex items-center gap-2 disabled:opacity-50"
           >
             {isSaving ? (
-              "Saving to InsForge..."
+              t("savingToInsforge")
             ) : (
               <>
-                <FileCheck className="w-4 h-4" /> Confirm &amp; Save
+                <FileCheck className="w-4 h-4" /> {t("confirmSaveBtn")}
               </>
             )}
           </button>
@@ -186,7 +188,7 @@ export function VerificationCanvas({
         <div className="lg:col-span-5 bg-card rounded-2xl border border-border p-4 shadow-card sticky top-20">
           <div className="flex items-center justify-between pb-3 border-b border-border">
             <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-              <Eye className="w-4 h-4 text-primary" /> Original Document
+              <Eye className="w-4 h-4 text-primary" /> {t("originalDoc")}
             </span>
             <span className="text-[11px] text-muted-foreground truncate max-w-[180px]">{fileName}</span>
           </div>
@@ -227,7 +229,7 @@ export function VerificationCanvas({
           </div>
 
           <p className="text-[11px] text-muted-foreground text-center mt-3">
-            Tapping bounding boxes or row chips highlights the evidence.
+            {t("docEvidenceTapHint")}
           </p>
         </div>
 
@@ -236,13 +238,13 @@ export function VerificationCanvas({
           {/* Document Header Metadata */}
           <div className="bg-card rounded-2xl border border-border p-5 shadow-card">
             <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-primary" /> Document Details
+              <ShieldCheck className="w-4 h-4 text-primary" /> {t("docDetails")}
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1">
-                  <Calendar className="w-3 h-3" /> Report Date
+                  <Calendar className="w-3 h-3" /> {t("reportDate")}
                 </label>
                 <input
                   type="date"
@@ -254,7 +256,7 @@ export function VerificationCanvas({
 
               <div>
                 <label className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1">
-                  <User className="w-3 h-3" /> Doctor Name
+                  <User className="w-3 h-3" /> {t("doctorName")}
                 </label>
                 <input
                   type="text"
@@ -266,7 +268,7 @@ export function VerificationCanvas({
 
               <div>
                 <label className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1">
-                  <Building className="w-3 h-3" /> Clinic / Lab
+                  <Building className="w-3 h-3" /> {t("clinicLab")}
                 </label>
                 <input
                   type="text"
@@ -288,7 +290,7 @@ export function VerificationCanvas({
                   : "bg-muted text-muted-foreground hover:text-foreground"
               }`}
             >
-              Lab Results ({labs.length})
+              {t("labResultsCount")} ({labs.length})
             </button>
             <button
               onClick={() => setActiveTab("meds")}
@@ -298,7 +300,7 @@ export function VerificationCanvas({
                   : "bg-muted text-muted-foreground hover:text-foreground"
               }`}
             >
-              Prescriptions &amp; Meds ({meds.length})
+              {t("medsCount")} ({meds.length})
             </button>
           </div>
 
@@ -325,7 +327,7 @@ export function VerificationCanvas({
                         />
                         {isLowConfidence && (
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 flex items-center gap-1 whitespace-nowrap">
-                            <AlertTriangle className="w-3 h-3" /> Please verify
+                            <AlertTriangle className="w-3 h-3" /> {t("pleaseVerify")}
                           </span>
                         )}
                       </div>
@@ -341,7 +343,7 @@ export function VerificationCanvas({
 
                     <div className="grid grid-cols-3 gap-2">
                       <div>
-                        <label className="text-[10px] font-semibold text-muted-foreground">Value</label>
+                        <label className="text-[10px] font-semibold text-muted-foreground">{t("testValue")}</label>
                         <input
                           type="number"
                           step="any"
@@ -351,7 +353,7 @@ export function VerificationCanvas({
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-semibold text-muted-foreground">Unit</label>
+                        <label className="text-[10px] font-semibold text-muted-foreground">{t("testUnit")}</label>
                         <input
                           type="text"
                           value={lab.unit}
@@ -360,7 +362,7 @@ export function VerificationCanvas({
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-semibold text-muted-foreground">Normal Target</label>
+                        <label className="text-[10px] font-semibold text-muted-foreground">{t("normalTarget")}</label>
                         <input
                           type="text"
                           value={lab.reference_range}
@@ -377,7 +379,7 @@ export function VerificationCanvas({
                 onClick={handleAddLab}
                 className="w-full py-3 rounded-xl border border-dashed border-border text-xs font-bold text-muted-foreground hover:text-primary hover:border-primary/50 flex items-center justify-center gap-1.5 transition-colors"
               >
-                <Plus className="w-4 h-4" /> Add Missing Lab Result
+                <Plus className="w-4 h-4" /> {t("addMissingLab")}
               </button>
             </div>
           )}
@@ -405,7 +407,7 @@ export function VerificationCanvas({
                         />
                         {isLowConfidence && (
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 flex items-center gap-1 whitespace-nowrap">
-                            <AlertTriangle className="w-3 h-3" /> Please verify
+                            <AlertTriangle className="w-3 h-3" /> {t("pleaseVerify")}
                           </span>
                         )}
                       </div>
@@ -421,7 +423,7 @@ export function VerificationCanvas({
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       <div>
-                        <label className="text-[10px] font-semibold text-muted-foreground">Frequency (e.g. 1-0-1)</label>
+                        <label className="text-[10px] font-semibold text-muted-foreground">{t("medFrequency")}</label>
                         <input
                           type="text"
                           value={med.frequency || ""}
@@ -430,7 +432,7 @@ export function VerificationCanvas({
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-semibold text-muted-foreground">Timing / Instructions</label>
+                        <label className="text-[10px] font-semibold text-muted-foreground">{t("medTiming")}</label>
                         <input
                           type="text"
                           value={med.timing || ""}
@@ -439,7 +441,7 @@ export function VerificationCanvas({
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-semibold text-muted-foreground">Duration</label>
+                        <label className="text-[10px] font-semibold text-muted-foreground">{t("medDuration")}</label>
                         <input
                           type="text"
                           value={med.duration || ""}
@@ -456,7 +458,7 @@ export function VerificationCanvas({
                 onClick={handleAddMed}
                 className="w-full py-3 rounded-xl border border-dashed border-border text-xs font-bold text-muted-foreground hover:text-primary hover:border-primary/50 flex items-center justify-center gap-1.5 transition-colors"
               >
-                <Plus className="w-4 h-4" /> Add Missing Prescription
+                <Plus className="w-4 h-4" /> {t("addMissingMed")}
               </button>
             </div>
           )}

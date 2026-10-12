@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useCareLensStore } from "@/lib/store";
+import { useTranslation } from "@/lib/useTranslation";
 import { ThemeMode, AccessibilityMode, SupportedLanguage } from "@/lib/types";
 import {
   HeartPulse,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 
 export function Navbar({ activeTab, onSelectTab }: { activeTab: string; onSelectTab: (tab: string) => void }) {
+  const { t } = useTranslation();
   const {
     user,
     setAuthModalOpen,
@@ -43,8 +45,8 @@ export function Navbar({ activeTab, onSelectTab }: { activeTab: string; onSelect
   const activeName = activeMember
     ? `${activeMember.name} (${activeMember.relationship})`
     : user
-    ? `${user.full_name || user.email.split("@")[0]} (Self)`
-    : "Sign In";
+    ? `${user.full_name || user.email.split("@")[0]} (${t("self")})`
+    : t("signIn");
 
   const themes: Array<{ id: ThemeMode; label: string; icon: React.ReactNode; color: string }> = [
     { id: "daylight", label: "Daylight", icon: <Sun className="w-4 h-4 text-blue-600" />, color: "bg-blue-600" },
@@ -74,27 +76,28 @@ export function Navbar({ activeTab, onSelectTab }: { activeTab: string; onSelect
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-xl tracking-tight text-foreground">CareLens</span>
+                <span className="font-extrabold text-xl tracking-tight text-foreground">{t("brandTitle")}</span>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">
-                  Copilot
+                  {t("copilotBadge")}
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground hidden sm:block">AI Personal Health Copilot</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">{t("brandTagline")}</p>
             </div>
           </div>
 
           {/* Center Navigation Links (Desktop) */}
           <nav className="hidden md:flex items-center gap-1">
             {[
-              { id: "dashboard", label: "Dashboard" },
-              { id: "upload", label: "Upload & Scan" },
-              { id: "timeline", label: "Timeline" },
-              { id: "trends", label: "Trends" },
-              { id: "medications", label: "Medicines" },
-              { id: "ask", label: "Ask Records" },
-              { id: "brief", label: "Visit Brief" },
-              { id: "abdm", label: "ABDM & FHIR" },
-              { id: "settings", label: "Settings" },
+              { id: "dashboard", label: t("navDashboard") },
+              { id: "upload", label: t("navUpload") },
+              { id: "timeline", label: t("navTimeline") },
+              { id: "trends", label: t("navTrends") },
+              { id: "medications", label: t("navMedications") },
+              { id: "ask", label: t("navAsk") },
+              { id: "brief", label: t("navBrief") },
+              { id: "abdm", label: t("navAbdm") },
+              { id: "settings", label: t("navSettings") },
+              { id: "admin", label: "Admin" },
             ].map((item) => (
               <button
                 key={item.id}
@@ -135,7 +138,7 @@ export function Navbar({ activeTab, onSelectTab }: { activeTab: string; onSelect
                   {/* Active Account Identity */}
                   <div className="px-2.5 py-2 bg-muted/50 rounded-lg mb-2 border border-border">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Signed In Account</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{t("activeProfile")}</span>
                       <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">Active</span>
                     </div>
                     <p className="text-xs font-bold text-foreground truncate mt-0.5">{user?.full_name || "Guest User"}</p>
@@ -143,7 +146,7 @@ export function Navbar({ activeTab, onSelectTab }: { activeTab: string; onSelect
                   </div>
 
                   <div className="px-2 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                    Switch Family Member
+                    {t("activeProfile")}
                   </div>
                   <button
                     onClick={() => {
@@ -154,7 +157,7 @@ export function Navbar({ activeTab, onSelectTab }: { activeTab: string; onSelect
                       activeFamilyMemberId === null ? "bg-primary/10 text-primary font-semibold" : "hover:bg-muted"
                     }`}
                   >
-                    <span>{user?.full_name || "Primary User"} (Self)</span>
+                    <span>{user?.full_name || "Primary User"} ({t("self")})</span>
                     {activeFamilyMemberId === null && <CheckCircle2 className="w-3.5 h-3.5" />}
                   </button>
 
@@ -184,7 +187,7 @@ export function Navbar({ activeTab, onSelectTab }: { activeTab: string; onSelect
                       }}
                       className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-muted rounded-lg flex items-center gap-2 transition-colors"
                     >
-                      <Users className="w-3.5 h-3.5 text-primary" /> Manage Family Profiles
+                      <Users className="w-3.5 h-3.5 text-primary" /> {t("activeProfile")}
                     </button>
                     <button
                       onClick={() => {
@@ -193,7 +196,16 @@ export function Navbar({ activeTab, onSelectTab }: { activeTab: string; onSelect
                       }}
                       className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-muted rounded-lg flex items-center gap-2 transition-colors"
                     >
-                      <Settings className="w-3.5 h-3.5 text-primary" /> Profile &amp; Settings
+                      <Settings className="w-3.5 h-3.5 text-primary" /> {t("profileSettings")}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowProfileMenu(false);
+                        onSelectTab("admin");
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 rounded-lg flex items-center gap-2 transition-colors"
+                    >
+                      <ShieldAlert className="w-3.5 h-3.5" /> Admin Control Portal
                     </button>
                     <button
                       onClick={() => {
@@ -202,7 +214,7 @@ export function Navbar({ activeTab, onSelectTab }: { activeTab: string; onSelect
                       }}
                       className="w-full text-left px-2.5 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 rounded-lg flex items-center gap-2 transition-colors"
                     >
-                      <User className="w-3.5 h-3.5" /> Switch User / Login
+                      <User className="w-3.5 h-3.5" /> {t("switchUser")}
                     </button>
                     {user && (
                       <button
@@ -212,7 +224,7 @@ export function Navbar({ activeTab, onSelectTab }: { activeTab: string; onSelect
                         }}
                         className="w-full text-left px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 rounded-lg flex items-center gap-2 transition-colors"
                       >
-                        <LogOut className="w-3.5 h-3.5" /> Sign Out
+                        <LogOut className="w-3.5 h-3.5" /> {t("signOut")}
                       </button>
                     )}
                   </div>

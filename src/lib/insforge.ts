@@ -151,6 +151,20 @@ export async function authLogout() {
   }
 }
 
+export async function authLoginWithGoogle() {
+  try {
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://5i9wrqng.insforge.site";
+    const res = await insforge.auth.signInWithOAuth("google", {
+      redirectTo: origin,
+      additionalParams: { prompt: "select_account" },
+    });
+    return res;
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Google OAuth initiation failed";
+    return { error: new Error(message) };
+  }
+}
+
 export async function fetchCurrentProfile(userId: string) {
   try {
     const { data, error } = await insforge.database

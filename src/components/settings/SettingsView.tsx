@@ -1,9 +1,8 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { useCareLensStore } from "@/lib/store";
 import { ThemeMode, AccessibilityMode, SupportedLanguage, UserProfile } from "@/lib/types";
 import { syncUserProfile, authLogout } from "@/lib/insforge";
+import { useTranslation } from "@/lib/useTranslation";
 import {
   Settings,
   Sun,
@@ -27,9 +26,11 @@ import {
   Save,
   Sparkles,
   AlertCircle,
+  ShieldAlert,
 } from "lucide-react";
 
-export function SettingsView() {
+export function SettingsView({ onNavigate }: { onNavigate?: (tab: string) => void }) {
+  const { t } = useTranslation();
   const {
     user,
     setUser,
@@ -190,10 +191,10 @@ export function SettingsView() {
       <div className="bg-card rounded-2xl border border-border p-6 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2">
-            <Settings className="w-6 h-6 text-primary" /> Application Settings &amp; Profile
+            <Settings className="w-6 h-6 text-primary" /> {t("settingsTitle")}
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Manage your patient profile, authentication session, clinical reference demographics, themes, and data governance.
+            {t("settingsSubtitle")}
           </p>
         </div>
 
@@ -205,7 +206,7 @@ export function SettingsView() {
               className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
             >
               <LogOut className="w-3.5 h-3.5" />
-              <span>Log Out</span>
+              <span>{t("signOut")}</span>
             </button>
           ) : (
             <button
@@ -213,7 +214,7 @@ export function SettingsView() {
               className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl bg-primary text-primary-foreground shadow hover:bg-primary/90 transition-colors"
             >
               <User className="w-3.5 h-3.5" />
-              <span>Sign In / Register</span>
+              <span>{t("signIn")}</span>
             </button>
           )}
         </div>
@@ -224,7 +225,7 @@ export function SettingsView() {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-              <User className="w-4 h-4 text-primary" /> Personal Health Profile &amp; Demographics
+              <User className="w-4 h-4 text-primary" /> {t("personalIdentity")}
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
               These details are used by the <strong>Clinical Rules Engine</strong> to adjust normal biomarker reference ranges for age and sex.
@@ -245,7 +246,7 @@ export function SettingsView() {
         <form onSubmit={handleSaveProfile} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-foreground mb-1">Full Legal Name</label>
+              <label className="block text-xs font-bold text-foreground mb-1">{t("fullName")}</label>
               <div className="relative">
                 <User className="w-4 h-4 text-muted-foreground absolute left-3 top-3" />
                 <input
@@ -259,7 +260,7 @@ export function SettingsView() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-foreground mb-1">Account Email</label>
+              <label className="block text-xs font-bold text-foreground mb-1">{t("email")}</label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-muted-foreground absolute left-3 top-3" />
                 <input
@@ -274,7 +275,7 @@ export function SettingsView() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-bold text-foreground mb-1">Date of Birth (For Age Range)</label>
+              <label className="block text-xs font-bold text-foreground mb-1">{t("dob")}</label>
               <div className="relative">
                 <Calendar className="w-4 h-4 text-muted-foreground absolute left-3 top-3" />
                 <input
@@ -288,20 +289,20 @@ export function SettingsView() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-foreground mb-1">Biological Sex (Reference Evaluator)</label>
+              <label className="block text-xs font-bold text-foreground mb-1">{t("gender")}</label>
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value as "male" | "female" | "other")}
                 className="w-full px-3 py-2 text-xs rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
               >
-                <option value="male">Male (Standard Ranges)</option>
-                <option value="female">Female (Standard Ranges)</option>
-                <option value="other">Other / Not Specified</option>
+                <option value="male">{t("male")}</option>
+                <option value="female">{t("female")}</option>
+                <option value="other">{t("other")}</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-foreground mb-1">Blood Group</label>
+              <label className="block text-xs font-bold text-foreground mb-1">{t("bloodGroup")}</label>
               <select
                 value={bloodGroup}
                 onChange={(e) => setBloodGroup(e.target.value)}
@@ -318,7 +319,7 @@ export function SettingsView() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-foreground mb-1">Mobile Contact (+91)</label>
+              <label className="block text-xs font-bold text-foreground mb-1">{t("phone")}</label>
               <div className="relative">
                 <Phone className="w-4 h-4 text-muted-foreground absolute left-3 top-3" />
                 <input
@@ -358,7 +359,7 @@ export function SettingsView() {
               className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-bold text-xs shadow-md hover:bg-primary/90 transition-all flex items-center justify-center gap-1.5"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>{savingProfile ? "Saving Profile..." : "Save Profile Changes"}</span>
+              <span>{savingProfile ? t("saving") : t("saveProfile")}</span>
             </button>
           </div>
         </form>
@@ -368,7 +369,7 @@ export function SettingsView() {
       <div className="bg-card rounded-2xl border border-border p-6 shadow-card space-y-4">
         <div>
           <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-            <Lock className="w-4 h-4 text-primary" /> Account &amp; Session Management
+            <Lock className="w-4 h-4 text-primary" /> {t("accountSecurity")}
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">
             Log in to a different patient account, create a new family profile, or securely sign out.
@@ -388,7 +389,16 @@ export function SettingsView() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {onNavigate && (
+              <button
+                onClick={() => onNavigate("admin")}
+                className="px-3.5 py-2 rounded-xl bg-red-100 hover:bg-red-200 text-red-900 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+              >
+                <ShieldAlert className="w-3.5 h-3.5 text-red-700" />
+                <span>Admin Master Portal</span>
+              </button>
+            )}
             <button
               onClick={() => setAuthModalOpen(true)}
               className="px-3.5 py-2 rounded-xl border border-border bg-card hover:bg-muted text-xs font-bold text-foreground transition-colors flex items-center gap-1.5 shadow-sm"
@@ -451,18 +461,18 @@ export function SettingsView() {
       {/* Section 2: Accessibility & Language */}
       <div className="bg-card rounded-2xl border border-border p-6 shadow-card space-y-5">
         <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-          <Type className="w-4 h-4 text-primary" /> Accessibility &amp; Regional Language
+          <Type className="w-4 h-4 text-primary" /> {t("accessibilityHeading")}
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Accessibility Mode */}
           <div className="p-4 rounded-xl border border-border bg-muted/20 space-y-3">
-            <span className="text-xs font-bold text-foreground block">Reading Accessibility Mode</span>
+            <span className="text-xs font-bold text-foreground block">{t("readingAccessibility")}</span>
             <div className="space-y-2">
               {[
-                { id: "standard", label: "Standard Layout" },
-                { id: "large-text", label: "Large Text Mode (+25% Font Scale)" },
-                { id: "simple", label: "Simple Mode (Elderly Friendly)" },
+                { id: "standard", label: t("layoutStandard") },
+                { id: "large-text", label: t("layoutLargeText") },
+                { id: "simple", label: t("layoutSimple") },
               ].map((mode) => (
                 <label
                   key={mode.id}
@@ -483,7 +493,7 @@ export function SettingsView() {
 
           {/* Language Preference */}
           <div className="p-4 rounded-xl border border-border bg-muted/20 space-y-3">
-            <span className="text-xs font-bold text-foreground block">Default Explanation Language</span>
+            <span className="text-xs font-bold text-foreground block">{t("defaultLangHeading")}</span>
             <div className="space-y-2">
               {[
                 { code: "en", label: "English" },
@@ -514,10 +524,10 @@ export function SettingsView() {
       <div className="bg-card rounded-2xl border border-border p-6 shadow-card space-y-4">
         <div>
           <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-            <Lock className="w-4 h-4 text-primary" /> Patient Consent Ledger
+            <Lock className="w-4 h-4 text-primary" /> {t("patientConsentTitle")}
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            You retain absolute sovereignty over your medical data. Revoke permissions at any time.
+            {t("patientConsentDesc")}
           </p>
         </div>
 
@@ -525,23 +535,23 @@ export function SettingsView() {
           {[
             {
               key: "emergency_access",
-              title: "Emergency Doctor QR Access",
-              desc: "Allows doctors with the 24-hour token to review active medicines and critical alerts.",
+              title: t("consentEmergencyTitle"),
+              desc: t("consentEmergencyDesc"),
             },
             {
               key: "abdm_sync",
-              title: "ABDM Health Information Provider (HIP) Sync",
-              desc: "Allows encrypted record discovery in Ayushman Bharat Digital Mission sandbox.",
+              title: t("consentAbdmTitle"),
+              desc: t("consentAbdmDesc"),
             },
             {
               key: "offline_cache",
-              title: "Offline PWA Record Caching",
-              desc: "Securely stores processed lab reports locally for offline consultation.",
+              title: t("consentOfflineTitle"),
+              desc: t("consentOfflineDesc"),
             },
             {
               key: "ai_assistance",
-              title: "Edge Function Medical Explanation",
-              desc: "Enables natural-language summarization using privacy-masked tokens.",
+              title: t("consentAiTitle"),
+              desc: t("consentAiDesc"),
             },
           ].map((item) => (
             <div
@@ -574,10 +584,10 @@ export function SettingsView() {
       <div className="bg-card rounded-2xl border border-border p-6 shadow-card space-y-4">
         <div>
           <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-            <History className="w-4 h-4 text-primary" /> Security &amp; Access Audit Log
+            <History className="w-4 h-4 text-primary" /> {t("auditLogTitle")}
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Cryptographically stamped ledger tracking every view, generation, and export event.
+            {t("auditLogDesc")}
           </p>
         </div>
 
@@ -585,10 +595,10 @@ export function SettingsView() {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="border-b border-border text-muted-foreground font-semibold">
-                <th className="py-2.5 px-3">Event Action</th>
-                <th className="py-2.5 px-3">Resource Target</th>
-                <th className="py-2.5 px-3">Timestamp</th>
-                <th className="py-2.5 px-3">Status</th>
+                <th className="py-2.5 px-3">{t("thEventAction")}</th>
+                <th className="py-2.5 px-3">{t("thResourceTarget")}</th>
+                <th className="py-2.5 px-3">{t("thTimestamp")}</th>
+                <th className="py-2.5 px-3">{t("thStatus")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">

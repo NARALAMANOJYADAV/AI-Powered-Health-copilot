@@ -135,6 +135,17 @@ export interface DocumentExplanation {
   disclaimer: string;
 }
 
+// --- Health Conditions & Diagnoses ---
+export interface HealthCondition {
+  id: string;
+  name: string;
+  type: "chronic" | "acute_sudden" | "allergy" | "other";
+  diagnosed_date?: string;
+  severity: "mild" | "moderate" | "severe";
+  status: "active" | "under_treatment" | "managed" | "resolved";
+  notes?: string;
+}
+
 // --- Database Entity Models ---
 export interface UserProfile {
   id: string;
@@ -148,6 +159,8 @@ export interface UserProfile {
   theme?: ThemeMode;
   language?: SupportedLanguage;
   accessibility_mode?: AccessibilityMode;
+  role?: "patient" | "admin" | "caregiver";
+  conditions?: HealthCondition[];
 }
 
 export interface FamilyMember {
@@ -160,6 +173,7 @@ export interface FamilyMember {
   blood_group?: string;
   abha_id?: string;
   notes?: string;
+  conditions?: HealthCondition[];
   created_at?: string;
 }
 

@@ -1,8 +1,7 @@
-"use client";
-
 import React, { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { useCareLensStore } from "@/lib/store";
+import { useTranslation } from "@/lib/useTranslation";
 import {
   FileBadge2,
   QrCode,
@@ -23,6 +22,7 @@ import {
 } from "lucide-react";
 
 export function DoctorVisitBrief() {
+  const { t } = useTranslation();
   const { familyMembers, activeFamilyMemberId } = useCareLensStore();
   const activeMember = familyMembers.find((m) => m.id === activeFamilyMemberId);
   const patientName = activeMember ? activeMember.name : "Rajesh Kumar";
@@ -56,10 +56,10 @@ export function DoctorVisitBrief() {
       <div className="bg-card rounded-2xl border border-border p-6 shadow-card print:hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2">
-            <FileBadge2 className="w-6 h-6 text-primary" /> Doctor Visit Brief
+            <FileBadge2 className="w-6 h-6 text-primary" /> {t("briefTitle")}
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            One-page clinical summary optimized for consultation. Share via QR or expiring 24h link.
+            {t("briefSubtitle")}
           </p>
         </div>
 
@@ -68,14 +68,14 @@ export function DoctorVisitBrief() {
             onClick={handlePrint}
             className="px-4 py-2 rounded-xl bg-muted border border-border text-foreground text-xs font-bold hover:bg-muted/80 transition-colors flex items-center gap-1.5"
           >
-            <Printer className="w-4 h-4 text-primary" /> Print / Save PDF
+            <Printer className="w-4 h-4 text-primary" /> {t("printPdf")}
           </button>
           <button
             onClick={handleCopyLink}
             className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold shadow-md shadow-primary/20 hover:opacity-95 transition-opacity flex items-center gap-1.5"
           >
             {isCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            {isCopied ? "Link Copied!" : "Copy 24h Share Link"}
+            {isCopied ? t("linkCopied") : t("copyShareLink")}
           </button>
         </div>
       </div>
@@ -90,20 +90,20 @@ export function DoctorVisitBrief() {
           <div className="space-y-2 flex-1 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2">
               <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-800 flex items-center gap-1">
-                <Clock className="w-3 h-3" /> Expires in 24 Hours
+                <Clock className="w-3 h-3" /> {t("expiresIn24h")}
               </span>
               {isRevoked ? (
                 <span className="text-xs font-bold px-2 py-0.5 rounded bg-red-100 text-red-800">Revoked</span>
               ) : (
                 <span className="text-xs font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                  Active &amp; Secure
+                  {t("activeAndSecure")}
                 </span>
               )}
             </div>
 
-            <h3 className="text-base font-bold text-foreground">Secure Doctor Access Code</h3>
+            <h3 className="text-base font-bold text-foreground">{t("scanQrNotice")}</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Show this QR code during your clinic visit. Your physician can scan it on their mobile or tablet to instantly review this structured brief without downloading any app.
+              {t("qrExplainer")}
             </p>
 
             <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
@@ -115,7 +115,7 @@ export function DoctorVisitBrief() {
                   onClick={handleRevoke}
                   className="text-xs font-bold text-destructive hover:underline"
                 >
-                  Revoke Link Now
+                  {t("revokeLink")}
                 </button>
               )}
             </div>
@@ -132,10 +132,10 @@ export function DoctorVisitBrief() {
               <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold text-base">
                 <HeartPulse className="w-5 h-5" />
               </div>
-              <h1 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">CareLens Health Brief</h1>
+              <h1 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">{t("briefTitle")}</h1>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Confidential Patient Health Summary for Clinical Consultation
+              {t("confidentialSummary")}
             </p>
           </div>
 
@@ -149,27 +149,27 @@ export function DoctorVisitBrief() {
         {/* Patient Demographics Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded-xl bg-muted/40 border border-border text-xs">
           <div>
-            <span className="text-muted-foreground font-semibold">Patient Name:</span>
+            <span className="text-muted-foreground font-semibold">{t("fullName")}:</span>
             <div className="font-extrabold text-foreground text-sm mt-0.5">{patientName}</div>
           </div>
           <div>
-            <span className="text-muted-foreground font-semibold">Age / Gender:</span>
-            <div className="font-extrabold text-foreground text-sm mt-0.5">52 Y / Male</div>
+            <span className="text-muted-foreground font-semibold">{t("gender")}:</span>
+            <div className="font-extrabold text-foreground text-sm mt-0.5">52 Y / {t("male")}</div>
           </div>
           <div>
-            <span className="text-muted-foreground font-semibold">Blood Group:</span>
+            <span className="text-muted-foreground font-semibold">{t("bloodGroup")}:</span>
             <div className="font-extrabold text-foreground text-sm mt-0.5">O Positive (O+)</div>
           </div>
           <div>
-            <span className="text-muted-foreground font-semibold">Known Allergies:</span>
-            <div className="font-extrabold text-emerald-700 text-sm mt-0.5">NKDA (None Known)</div>
+            <span className="text-muted-foreground font-semibold">{t("knownAllergies")}:</span>
+            <div className="font-extrabold text-emerald-700 text-sm mt-0.5">{t("noneKnown")}</div>
           </div>
         </div>
 
         {/* Section 1: Abnormal Biomarkers & Key Shifts */}
         <div className="space-y-3">
           <h3 className="text-sm font-extrabold text-foreground uppercase tracking-wider flex items-center gap-1.5 pb-1 border-b border-border">
-            <Activity className="w-4 h-4 text-primary" /> 1. Abnormal Findings &amp; Recent Biomarker Trajectory
+            <Activity className="w-4 h-4 text-primary" /> 1. {t("abnormalLabs")}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -204,17 +204,17 @@ export function DoctorVisitBrief() {
         {/* Section 2: Active Prescription Regimen */}
         <div className="space-y-3">
           <h3 className="text-sm font-extrabold text-foreground uppercase tracking-wider flex items-center gap-1.5 pb-1 border-b border-border">
-            <Pill className="w-4 h-4 text-primary" /> 2. Current Active Medications &amp; Dosages
+            <Pill className="w-4 h-4 text-primary" /> 2. {t("currentMedications")}
           </h3>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-border text-muted-foreground font-semibold">
-                  <th className="py-2 px-2">Brand Name</th>
-                  <th className="py-2 px-2">Generic Equivalent</th>
-                  <th className="py-2 px-2">Dosage &amp; Timing</th>
-                  <th className="py-2 px-2">Instructions</th>
+                  <th className="py-2 px-2">{t("briefDocName")}</th>
+                  <th className="py-2 px-2">{t("genericName")}</th>
+                  <th className="py-2 px-2">{t("dosageTiming")}</th>
+                  <th className="py-2 px-2">{t("instructions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -250,15 +250,15 @@ export function DoctorVisitBrief() {
         {/* Section 3: Smart Questions to Ask Doctor */}
         <div className="space-y-3">
           <h3 className="text-sm font-extrabold text-foreground uppercase tracking-wider flex items-center gap-1.5 pb-1 border-b border-border">
-            <HelpCircle className="w-4 h-4 text-primary" /> 3. Suggested Questions for This Consultation
+            <HelpCircle className="w-4 h-4 text-primary" /> 3. {t("suggestedQuestionsTitle")}
           </h3>
 
           <div className="space-y-2 text-xs">
             {[
-              "My HbA1c rose from 7.2% to 8.1% over 3 months despite regular Glycomet 500mg. Would a dose adjustment or combination therapy (e.g. SGLT2 or DPP-4) be appropriate?",
-              "My total cholesterol dropped favorably to 188 mg/dL after starting Storvas 10mg. How long should I continue this dose before repeating my lipid profile?",
-              "Are there any specific dietary or exercise goals I should target alongside my blood pressure regimen (Telma 40mg)?",
-              "When should I schedule my next fasting blood sugar check?",
+              t("briefQuestion1"),
+              t("briefQuestion2"),
+              t("briefQuestion3"),
+              t("briefQuestion4"),
             ].map((q, idx) => (
               <div key={idx} className="p-2.5 rounded-xl bg-muted/40 border border-border flex items-start gap-2.5">
                 <span className="w-5 h-5 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center flex-shrink-0 text-[11px]">

@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { OCRWord, DocumentExtraction } from "@/lib/types";
 import { maskPIITokens } from "@/lib/privacy";
 import { uploadMedicalDocument, invokeExtractFunction } from "@/lib/insforge";
+import { useCareLensStore } from "@/lib/store";
+import { useTranslation } from "@/lib/useTranslation";
 import {
   Camera,
   UploadCloud,
@@ -30,13 +32,22 @@ interface ScannerProps {
 }
 
 export function DocumentScanner({ onExtractionComplete, presetSample }: ScannerProps) {
+  const { t, language } = useTranslation();
   const [isCameraActive, setIsCameraActive] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("eng");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(
+    language === "te" ? "tel" : language === "hi" ? "hin" : language === "ta" ? "tam" : "eng"
+  );
   const [statusMessage, setStatusMessage] = useState<string>("");
   const [progressPercent, setProgressPercent] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSelectedLanguage(
+      language === "te" ? "tel" : language === "hi" ? "hin" : language === "ta" ? "tam" : "eng"
+    );
+  }, [language]);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -300,16 +311,16 @@ export function DocumentScanner({ onExtractionComplete, presetSample }: ScannerP
       <div className="bg-card rounded-2xl border border-border p-6 shadow-card">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-extrabold text-foreground tracking-tight">Upload &amp; Scan Health Document</h2>
+            <h2 className="text-2xl font-extrabold text-foreground tracking-tight">{t("scannerTitle")}</h2>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Secure in-browser OCR, automatic Aadhaar/ABHA masking, and clinical entity extraction.
+              {t("scannerSubtitle")}
             </p>
           </div>
 
           {/* OCR Language Selector */}
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
-              <Languages className="w-3.5 h-3.5 text-primary" /> OCR Lang:
+              <Languages className="w-3.5 h-3.5 text-primary" /> {t("ocrLangLabel")}:
             </span>
             <select
               value={selectedLanguage}
@@ -366,8 +377,8 @@ export function DocumentScanner({ onExtractionComplete, presetSample }: ScannerP
             </div>
 
             <div>
-              <h3 className="text-lg font-bold text-foreground">Drag and drop your report or prescription</h3>
-              <p className="text-xs text-muted-foreground mt-1">Supports PNG, JPG, WebP, and PDF files</p>
+              <h3 className="text-lg font-bold text-foreground">{t("uploadTitle")}</h3>
+              <p className="text-xs text-muted-foreground mt-1">{t("dragDropText")}</p>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -376,21 +387,21 @@ export function DocumentScanner({ onExtractionComplete, presetSample }: ScannerP
                 disabled={isProcessing}
                 className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-md shadow-primary/20 hover:opacity-95 transition-opacity disabled:opacity-50"
               >
-                Browse File
+                {t("uploadTitle")}
               </button>
               <button
                 onClick={startCamera}
                 disabled={isProcessing}
                 className="px-5 py-2.5 rounded-xl bg-muted border border-border text-foreground font-semibold text-sm hover:bg-muted/80 transition-colors flex items-center gap-2 disabled:opacity-50"
               >
-                <Video className="w-4 h-4 text-primary" /> Use Camera
+                <Video className="w-4 h-4 text-primary" /> {t("takePhoto")}
               </button>
             </div>
 
             {/* Privacy Protection Notice */}
             <div className="p-3 rounded-xl bg-muted/60 border border-border text-[11px] text-muted-foreground flex items-center justify-center gap-2 mt-4">
               <Lock className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-              <span>Aadhaar, ABHA ID &amp; Phone numbers are automatically masked before LLM extraction.</span>
+              <span>{t("privacyNotice")}</span>
             </div>
           </div>
         </div>
@@ -429,10 +440,10 @@ export function DocumentScanner({ onExtractionComplete, presetSample }: ScannerP
       <div className="bg-card rounded-2xl border border-border p-6 shadow-card">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-primary" />
-          <h3 className="text-sm font-bold text-foreground">Or Test With Authentic Indian Clinical Samples</h3>
+          <h3 className="text-sm font-bold text-foreground">{t("orTrySamples")}</h3>
         </div>
         <p className="text-xs text-muted-foreground mt-1">
-          Instant realistic test datasets with real OCR bboxes, privacy masking, and clinical values.
+          {t("sampleDesc")}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
@@ -442,11 +453,11 @@ export function DocumentScanner({ onExtractionComplete, presetSample }: ScannerP
             className="p-4 rounded-xl border border-border bg-muted/30 hover:bg-muted text-left transition-all disabled:opacity-50"
           >
             <div className="flex items-center justify-between">
-              <span className="font-bold text-sm text-foreground">Comprehensive Metabolic &amp; HbA1c</span>
+              <span className="font-bold text-sm text-foreground">{t("diabetesSampleTitle")}</span>
               <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800">Lab Report</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Contains HbA1c 8.1%, FBS 165 mg/dL, Creatinine 0.9, Cholesterol 188. Tests confidence chips &amp; trends.
+              HbA1c 8.1%, FBS 165 mg/dL, Creatinine 0.9, Cholesterol 188.
             </p>
           </button>
 
@@ -456,11 +467,11 @@ export function DocumentScanner({ onExtractionComplete, presetSample }: ScannerP
             className="p-4 rounded-xl border border-border bg-muted/30 hover:bg-muted text-left transition-all disabled:opacity-50"
           >
             <div className="flex items-center justify-between">
-              <span className="font-bold text-sm text-foreground">Cardiology Multi-Drug Prescription</span>
+              <span className="font-bold text-sm text-foreground">{t("cardiacSampleTitle")}</span>
               <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">Rx</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Contains Glycomet, Telma, Storvas, Pan 40, Dolo 650. Tests brand normalization &amp; duplicate therapy.
+              Glycomet, Telma, Storvas, Pan 40.
             </p>
           </button>
         </div>

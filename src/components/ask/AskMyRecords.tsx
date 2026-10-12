@@ -1,9 +1,8 @@
-"use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import { useCareLensStore } from "@/lib/store";
 import { invokeAskFunction } from "@/lib/insforge";
 import { SupportedLanguage } from "@/lib/types";
+import { useTranslation } from "@/lib/useTranslation";
 import {
   MessageSquareText,
   Send,
@@ -37,25 +36,37 @@ interface Message {
 }
 
 export function AskMyRecords({ onOpenReport }: { onOpenReport?: () => void }) {
-  const { language, familyMembers, activeFamilyMemberId } = useCareLensStore();
+  const { t, language } = useTranslation();
+  const { familyMembers, activeFamilyMemberId } = useCareLensStore();
   const activeMember = familyMembers.find((m) => m.id === activeFamilyMemberId);
   const patientName = activeMember ? activeMember.name : "Rajesh Kumar";
+
+  const getWelcomeText = (lang: string) => {
+    if (lang === "te") return `నమస్కారం ${patientName}! మీ అప్‌లోడ్ చేసిన రికార్డుల ఆధారంగా మీరు ఏదైనా అడగవచ్చు. ఉదాహరణకు: నా HbA1c ఎంత? లేదా నా మందుల సమయాలు ఏమిటి?`;
+    if (lang === "hi") return `नमस्ते ${patientName}! आप अपने मेडिकल रिकॉर्ड के बारे में मुझसे पूछ सकते हैं। जैसे: मेरा HbA1c कितना है? या मेरी दवाएं कब लेनी हैं?`;
+    if (lang === "ta") return `வணக்கம் ${patientName}! உங்கள் மருத்துவ பதிவுகள் பற்றி என்னிடம் கேட்கலாம்.`;
+    return `Hello ${patientName}! I can answer questions strictly based on your stored health records. Ask me about your lab test values, medication schedule, or trends.`;
+  };
 
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "msg-1",
       sender: "bot",
-      text:
-        language === "te"
-          ? `నమస్కారం ${patientName}! మీ అప్‌లోడ్ చేసిన రికార్డుల ఆధారంగా మీరు ఏదైనా అడగవచ్చు. ఉదాహరణకు: నా HbA1c ఎంత? లేదా నా మందుల సమయాలు ఏమిటి?`
-          : language === "hi"
-          ? `नमस्ते ${patientName}! आप अपने मेडिकल रिकॉर्ड के बारे में मुझसे पूछ सकते हैं। जैसे: मेरा HbA1c कितना है? या मेरी दवाएं कब लेनी हैं?`
-          : language === "ta"
-          ? `வணக்கம் ${patientName}! உங்கள் மருத்துவ பதிவுகள் பற்றி என்னிடம் கேட்கலாம்.`
-          : `Hello ${patientName}! I can answer questions strictly based on your stored health records. Ask me about your lab test values, medication schedule, or trends.`,
+      text: getWelcomeText(language),
       time: "Just now",
     },
   ]);
+
+  useEffect(() => {
+    setMessages([
+      {
+        id: "msg-welcome",
+        sender: "bot",
+        text: getWelcomeText(language),
+        time: "Just now",
+      },
+    ]);
+  }, [language, patientName]);
 
   const [inputQuery, setInputQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -208,10 +219,9 @@ export function AskMyRecords({ onOpenReport }: { onOpenReport?: () => void }) {
   };
 
   const suggestedQuestions = [
-    "What was my HbA1c on my last report?",
-    "When should I take Glycomet?",
-    "Is my kidney function normal?",
-    "Do I have diabetes? (Refusal Test)",
+    t("sampleQ1"),
+    t("sampleQ2"),
+    t("sampleQ3"),
   ];
 
   return (
@@ -221,10 +231,10 @@ export function AskMyRecords({ onOpenReport }: { onOpenReport?: () => void }) {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2">
-              <MessageSquareText className="w-6 h-6 text-primary" /> Ask My Records
+              <MessageSquareText className="w-6 h-6 text-primary" /> {t("askTitle")}
             </h2>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Grounded clinical QA assistant citing only your verified documents.
+              {t("askSubtitle")}
             </p>
           </div>
 
@@ -237,7 +247,7 @@ export function AskMyRecords({ onOpenReport }: { onOpenReport?: () => void }) {
 
         {/* Suggested Queries Chips */}
         <div className="mt-4 pt-3 border-t border-border flex items-center gap-2 overflow-x-auto pb-1">
-          <span className="text-xs font-semibold text-muted-foreground whitespace-nowrap">Suggested:</span>
+          <span className="text-xs font-semibold text-muted-foreground whitespace-nowrap">{t("suggestedQuestions")}:</span>
           {suggestedQuestions.map((q, idx) => (
             <button
               key={idx}
@@ -354,7 +364,7 @@ export function AskMyRecords({ onOpenReport }: { onOpenReport?: () => void }) {
                 placeholder={
                   isListening
                     ? "Listening to voice input..."
-                    : "Ask about your tests, dosages, or trends..."
+                    : t("askPlaceholder")
                 }
                 value={inputQuery}
                 onChange={(e) => setInputQuery(e.target.value)}

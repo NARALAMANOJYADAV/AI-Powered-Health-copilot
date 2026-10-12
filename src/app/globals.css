@@ -1,0 +1,195 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Force color scheme light everywhere */
+  color-scheme: light !important;
+
+  /* Default Theme: Daylight */
+  --background: 210 40% 98%;
+  --foreground: 222 47% 11%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+
+  --primary: 221 83% 53%; /* #2563EB */
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
+
+  --muted: 210 40% 95%;
+  --muted-foreground: 215 16% 47%;
+
+  --accent: 210 40% 93%;
+  --accent-foreground: 222 47% 11%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 221 83% 53%;
+
+  --radius: 1rem;
+}
+
+/* 2. Theme: Paper (warm cream background, brown-gray text, terracotta accent) */
+[data-theme="paper"] {
+  --background: 40 50% 96%; /* #FBF6EC */
+  --foreground: 24 10% 18%; /* #292524 */
+
+  --card: 45 40% 99%;
+  --card-foreground: 24 10% 18%;
+
+  --popover: 45 40% 99%;
+  --popover-foreground: 24 10% 18%;
+
+  --primary: 17 88% 40%; /* #C2410C terracotta */
+  --primary-foreground: 40 50% 96%;
+
+  --secondary: 40 30% 92%;
+  --secondary-foreground: 24 10% 18%;
+
+  --muted: 40 25% 90%;
+  --muted-foreground: 25 6% 45%;
+
+  --accent: 38 45% 88%;
+  --accent-foreground: 24 10% 18%;
+
+  --border: 36 20% 86%;
+  --input: 36 20% 86%;
+  --ring: 17 88% 40%;
+}
+
+/* 3. Theme: Sage (pale green-gray background, deep teal accent) */
+[data-theme="sage"] {
+  --background: 135 20% 95%; /* #F1F6F2 */
+  --foreground: 160 30% 14%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 160 30% 14%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 160 30% 14%;
+
+  --primary: 175 77% 26%; /* #0F766E deep teal */
+  --primary-foreground: 135 20% 98%;
+
+  --secondary: 140 18% 90%;
+  --secondary-foreground: 160 30% 14%;
+
+  --muted: 140 15% 89%;
+  --muted-foreground: 155 10% 42%;
+
+  --accent: 140 22% 85%;
+  --accent-foreground: 160 30% 14%;
+
+  --border: 140 15% 85%;
+  --input: 140 15% 85%;
+  --ring: 175 77% 26%;
+}
+
+/* 4. Theme: High Contrast Light (pure white, solid black text, WCAG AAA 3px ring) */
+[data-theme="high-contrast"] {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 0%;
+
+  --primary: 224 76% 48%; /* #1D4ED8 */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 0% 93%;
+  --secondary-foreground: 0 0% 0%;
+
+  --muted: 0 0% 90%;
+  --muted-foreground: 0 0% 20%;
+
+  --accent: 0 0% 88%;
+  --accent-foreground: 0 0% 0%;
+
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 224 76% 48%;
+}
+
+[data-theme="high-contrast"] *:focus-visible {
+  outline: 3px solid #1D4ED8 !important;
+  outline-offset: 2px !important;
+}
+
+/* Accessibility: Large Text Mode (+25% scale) */
+[data-accessibility="large-text"] {
+  font-size: 125%;
+}
+
+/* Accessibility: Simple Mode */
+[data-accessibility="simple"] .simple-hide {
+  display: none !important;
+}
+[data-accessibility="simple"] button,
+[data-accessibility="simple"] a {
+  min-height: 48px;
+  font-size: 1.1rem;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans Telugu', 'Noto Sans Devanagari', 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  min-height: 100vh;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Pulse highlight animation for sentence click-to-source */
+@keyframes source-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
+    border-color: #2563EB;
+    background-color: rgba(37, 99, 235, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
+    border-color: #1D4ED8;
+    background-color: rgba(37, 99, 235, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+    border-color: #2563EB;
+    background-color: rgba(37, 99, 235, 0.2);
+  }
+}
+
+.highlight-pulse {
+  animation: source-pulse 1.8s infinite ease-in-out;
+  border: 2px solid #2563EB !important;
+  z-index: 40 !important;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}

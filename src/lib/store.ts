@@ -9,8 +9,23 @@ import {
   DocumentRecord,
 } from "./types";
 
+export const DEFAULT_USER: UserProfile = {
+  id: "usr_rajesh_demo",
+  email: "rajesh.kumar@example.com",
+  full_name: "Rajesh Kumar",
+  phone: "+91 98490 12345",
+  date_of_birth: "1974-06-15",
+  gender: "male",
+  blood_group: "B+",
+  abha_id: "91-4521-8923-1045@abdm",
+  theme: "daylight",
+  language: "en",
+  accessibility_mode: "standard",
+};
+
 interface CareLensState {
   user: UserProfile | null;
+  isAuthModalOpen: boolean;
   familyMembers: FamilyMember[];
   activeFamilyMemberId: string | null; // null represents 'Self'
   theme: ThemeMode;
@@ -26,6 +41,7 @@ interface CareLensState {
 
   // Actions
   setUser: (user: UserProfile | null) => void;
+  setAuthModalOpen: (open: boolean) => void;
   setFamilyMembers: (members: FamilyMember[]) => void;
   addFamilyMember: (member: FamilyMember) => void;
   setActiveFamilyMemberId: (id: string | null) => void;
@@ -41,7 +57,8 @@ interface CareLensState {
 export const useCareLensStore = create<CareLensState>()(
   persist(
     (set) => ({
-      user: null,
+      user: DEFAULT_USER,
+      isAuthModalOpen: false,
       familyMembers: [],
       activeFamilyMemberId: null,
       theme: "daylight",
@@ -52,6 +69,7 @@ export const useCareLensStore = create<CareLensState>()(
       selectedSentenceSource: null,
 
       setUser: (user) => set({ user }),
+      setAuthModalOpen: (isAuthModalOpen) => set({ isAuthModalOpen }),
       setFamilyMembers: (familyMembers) => set({ familyMembers }),
       addFamilyMember: (member) =>
         set((state) => ({ familyMembers: [...state.familyMembers, member] })),
@@ -77,6 +95,7 @@ export const useCareLensStore = create<CareLensState>()(
         removeItem: () => {},
       })),
       partialize: (state) => ({
+        user: state.user,
         theme: state.theme,
         language: state.language,
         accessibility: state.accessibility,

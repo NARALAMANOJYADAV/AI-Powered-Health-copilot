@@ -17,6 +17,7 @@ import { DoctorVisitBrief } from "@/components/brief/DoctorVisitBrief";
 import { FamilyProfiles } from "@/components/family/FamilyProfiles";
 import { ABDMHub } from "@/components/abdm/ABDMHub";
 import { SettingsView } from "@/components/settings/SettingsView";
+import { AuthModal } from "@/components/auth/AuthModal";
 
 export default function CareLensApp() {
   const { theme, accessibility, language } = useCareLensStore();
@@ -156,6 +157,9 @@ export default function CareLensApp() {
 
       {/* Mobile-First Bottom Tab Bar */}
       <BottomTabBar activeTab={activeTab} onSelectTab={setActiveTab} />
+
+      {/* Authentication Modal */}
+      <AuthModal />
     </div>
   );
 }

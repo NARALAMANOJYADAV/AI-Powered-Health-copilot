@@ -93,3 +93,101 @@ export async function invokeAskFunction(payload: {
     throw err;
   }
 }
+
+/**
+ * Authentication & Profile helpers
+ */
+export async function authLogin(email: string, password: string) {
+  try {
+    const { data, error } = await insforge.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      return { success: false, error: error.message || "Failed to sign in" };
+    }
+    return { success: true, user: data?.user };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Authentication error";
+    return { success: false, error: message };
+  }
+}
+
+export async function authRegister(params: {
+  email: string;
+  password: string;
+  name: string;
+}) {
+  try {
+    const { data, error } = await insforge.auth.signUp({
+      email: params.email,
+      password: params.password,
+      name: params.name,
+    });
+    if (error) {
+      return { success: false, error: error.message || "Failed to sign up" };
+    }
+    return {
+      success: true,
+      user: data?.user,
+      requireEmailVerification: data?.requireEmailVerification,
+    };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Registration error";
+    return { success: false, error: message };
+  }
+}
+
+export async function authLogout() {
+  try {
+    const { error } = await insforge.auth.signOut();
+    if (error) {
+      console.warn("SignOut notice:", error.message);
+    }
+    return { success: true };
+  } catch (err) {
+    console.error("SignOut exception:", err);
+    return { success: true };
+  }
+}
+
+export async function fetchCurrentProfile(userId: string) {
+  try {
+    const { data, error } = await insforge.database
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export async function syncUserProfile(profile: {
+  id: string;
+  email?: string;
+  full_name?: string;
+  phone?: string;
+  date_of_birth?: string;
+  gender?: string;
+  blood_group?: string;
+  abha_id?: string;
+  theme?: string;
+  language?: string;
+  accessibility_mode?: string;
+}) {
+  try {
+    const { data, error } = await insforge.database
+      .from("profiles")
+      .upsert([profile]);
+    return { success: !error, data, error };
+  } catch (err) {
+    console.error("syncUserProfile error:", err);
+    return { success: false, error: err };
+  }
+}
